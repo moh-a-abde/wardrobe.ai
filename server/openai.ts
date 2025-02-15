@@ -29,7 +29,7 @@ Suggest an outfit combination. Return a JSON object with:
 }`;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4",
       messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" }
     });
@@ -96,7 +96,7 @@ Return a JSON object with this format:
 
     console.log('Sending request to OpenAI for shopping recommendations...');
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4",
       messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" }
     });
@@ -166,7 +166,7 @@ Return a JSON object with this format:
 
     console.log('Sending request to OpenAI for fashion trends...');
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4",
       messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" }
     });
