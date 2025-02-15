@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer } from "http";
 import { storage } from "./storage";
-import { generateOutfitSuggestion } from "./openai";
+import { generateOutfitSuggestion, generateShoppingRecommendations } from "./openai";
 import { 
   insertClothingItemSchema, 
   insertOutfitSchema, 
@@ -102,7 +102,7 @@ export async function registerRoutes(app: Express) {
     res.json(preferences);
   });
 
-  // Add new route group for shopping recommendations
+  // Shopping recommendations
   app.get("/api/recommendations", async (req, res) => {
     const recommendations = await storage.getProductRecommendations();
     res.json(recommendations);
@@ -116,7 +116,7 @@ export async function registerRoutes(app: Express) {
 
     // Store the recommendations
     const storedRecommendations = await Promise.all(
-      suggestions.recommendations.map(recommendation =>
+      suggestions.recommendations.map((recommendation) =>
         storage.createProductRecommendation(recommendation)
       )
     );
