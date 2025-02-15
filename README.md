@@ -18,7 +18,7 @@ Here’s a preview of the key screens in the AI Wardrobe Assistant:
 
 | Settings                                                       | Wardrobe                                                            |
 |----------------------------------------------------------------|---------------------------------------------------------------------|
-| ![Settings Screen](demo/Settings.png)                   | ![Wardrobe Screen](demo/Wardrobe.png)                        |
+| ![Settings Screen](demo/Settings.png)                   | ![Wardrobe Screen](demo/WardrobeShowcase.png)                        |
 
 
 
