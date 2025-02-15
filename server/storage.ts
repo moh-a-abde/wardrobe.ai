@@ -1,8 +1,11 @@
 import { 
   ClothingItem, InsertClothingItem,
   Outfit, InsertOutfit,
-  Preferences, InsertPreferences 
+  Preferences, InsertPreferences,
+  clothingItems, outfits, preferences
 } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   // Clothing Items
@@ -14,71 +17,50 @@ export interface IStorage {
   // Outfits
   getOutfits(): Promise<Outfit[]>;
   createOutfit(outfit: InsertOutfit): Promise<Outfit>;
-  
+
   // Preferences
   getPreferences(): Promise<Preferences | undefined>;
   updatePreferences(prefs: InsertPreferences): Promise<Preferences>;
 }
 
-export class MemStorage implements IStorage {
-  private clothingItems: Map<number, ClothingItem>;
-  private outfits: Map<number, Outfit>;
-  private preferences: Preferences | undefined;
-  private currentItemId: number;
-  private currentOutfitId: number;
-  private currentPrefId: number;
-
-  constructor() {
-    this.clothingItems = new Map();
-    this.outfits = new Map();
-    this.currentItemId = 1;
-    this.currentOutfitId = 1;
-    this.currentPrefId = 1;
-  }
-
+export class DatabaseStorage implements IStorage {
   async getClothingItems(): Promise<ClothingItem[]> {
-    return Array.from(this.clothingItems.values());
+    return await db.select().from(clothingItems);
   }
 
   async getClothingItem(id: number): Promise<ClothingItem | undefined> {
-    return this.clothingItems.get(id);
+    const [item] = await db.select().from(clothingItems).where(eq(clothingItems.id, id));
+    return item;
   }
 
   async createClothingItem(item: InsertClothingItem): Promise<ClothingItem> {
-    const id = this.currentItemId++;
-    const newItem = { ...item, id };
-    this.clothingItems.set(id, newItem);
+    const [newItem] = await db.insert(clothingItems).values(item).returning();
     return newItem;
   }
 
   async deleteClothingItem(id: number): Promise<void> {
-    this.clothingItems.delete(id);
+    await db.delete(clothingItems).where(eq(clothingItems.id, id));
   }
 
   async getOutfits(): Promise<Outfit[]> {
-    return Array.from(this.outfits.values());
+    return await db.select().from(outfits);
   }
 
   async createOutfit(outfit: InsertOutfit): Promise<Outfit> {
-    const id = this.currentOutfitId++;
-    const newOutfit = { 
-      ...outfit, 
-      id,
-      createdAt: new Date()
-    };
-    this.outfits.set(id, newOutfit);
+    const [newOutfit] = await db.insert(outfits).values(outfit).returning();
     return newOutfit;
   }
 
   async getPreferences(): Promise<Preferences | undefined> {
-    return this.preferences;
+    const [pref] = await db.select().from(preferences);
+    return pref;
   }
 
   async updatePreferences(prefs: InsertPreferences): Promise<Preferences> {
-    const id = this.currentPrefId;
-    this.preferences = { ...prefs, id };
-    return this.preferences;
+    await db.delete(preferences); // Clear existing preferences since we only want one
+    const [newPrefs] = await db.insert(preferences).values(prefs).returning();
+    return newPrefs;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
