@@ -10,11 +10,15 @@
 
 ## Demo
 
-Here’s a preview of the key screens in the AI Wardrobe Assistant:
+Here’s a preview of the key screens in the AI Wardrobe Assistant: 
 
 | Landing Screen / Outfit Generator                              | 
 |----------------------------------------------------------------|
-| ![Landing Screen](demo/LandingScreen.png)                     |
+| ![Landing Screen](demo/LandingScreen.png)                      | 
+
+| Product Recommendation System                                  |  
+|----------------------------------------------------------------|
+| ![RecommendationSystem](demo/RecommendationSystem.png)         |
 
 | Wardrobe Showcase                                             | Trends                                                 |
 |----------------------------------------------------------------|--------------------------------------------------------------------|
