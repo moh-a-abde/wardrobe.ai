@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Shirt, Settings, History, Home } from "lucide-react";
+import { Shirt, Settings, History, Home, Calendar } from "lucide-react";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [location] = useLocation();
@@ -7,6 +7,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const navItems = [
     { href: "/", icon: Home, label: "Home" },
     { href: "/wardrobe", icon: Shirt, label: "Wardrobe" },
+    { href: "/calendar", icon: Calendar, label: "Calendar" },
     { href: "/history", icon: History, label: "History" },
     { href: "/settings", icon: Settings, label: "Settings" },
   ];

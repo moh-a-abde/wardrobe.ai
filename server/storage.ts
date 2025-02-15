@@ -1,11 +1,12 @@
 import { 
   ClothingItem, InsertClothingItem,
   Outfit, InsertOutfit,
+  ScheduledOutfit, InsertScheduledOutfit,
   Preferences, InsertPreferences,
-  clothingItems, outfits, preferences
+  clothingItems, outfits, scheduledOutfits, preferences
 } from "@shared/schema";
 import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { eq, and, gte, lte } from "drizzle-orm";
 
 export interface IStorage {
   // Clothing Items
@@ -17,6 +18,11 @@ export interface IStorage {
   // Outfits
   getOutfits(): Promise<Outfit[]>;
   createOutfit(outfit: InsertOutfit): Promise<Outfit>;
+
+  // Scheduled Outfits
+  getScheduledOutfits(startDate: Date, endDate: Date): Promise<ScheduledOutfit[]>;
+  scheduleOutfit(scheduledOutfit: InsertScheduledOutfit): Promise<ScheduledOutfit>;
+  unscheduleOutfit(id: number): Promise<void>;
 
   // Preferences
   getPreferences(): Promise<Preferences | undefined>;
@@ -49,6 +55,30 @@ export class DatabaseStorage implements IStorage {
   async createOutfit(outfit: InsertOutfit): Promise<Outfit> {
     const [newOutfit] = await db.insert(outfits).values(outfit).returning();
     return newOutfit;
+  }
+
+  async getScheduledOutfits(startDate: Date, endDate: Date): Promise<ScheduledOutfit[]> {
+    return await db
+      .select()
+      .from(scheduledOutfits)
+      .where(
+        and(
+          gte(scheduledOutfits.date, startDate),
+          lte(scheduledOutfits.date, endDate)
+        )
+      );
+  }
+
+  async scheduleOutfit(scheduledOutfit: InsertScheduledOutfit): Promise<ScheduledOutfit> {
+    const [newScheduledOutfit] = await db
+      .insert(scheduledOutfits)
+      .values(scheduledOutfit)
+      .returning();
+    return newScheduledOutfit;
+  }
+
+  async unscheduleOutfit(id: number): Promise<void> {
+    await db.delete(scheduledOutfits).where(eq(scheduledOutfits.id, id));
   }
 
   async getPreferences(): Promise<Preferences | undefined> {

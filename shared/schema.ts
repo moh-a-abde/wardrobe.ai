@@ -20,6 +20,15 @@ export const outfits = pgTable("outfits", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// New table for scheduled outfits
+export const scheduledOutfits = pgTable("scheduled_outfits", {
+  id: serial("id").primaryKey(),
+  outfitId: integer("outfit_id").notNull(),
+  date: timestamp("date").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const preferences = pgTable("preferences", {
   id: serial("id").primaryKey(),
   stylePreferences: jsonb("style_preferences").notNull(),
@@ -28,11 +37,14 @@ export const preferences = pgTable("preferences", {
 
 export const insertClothingItemSchema = createInsertSchema(clothingItems).omit({ id: true });
 export const insertOutfitSchema = createInsertSchema(outfits).omit({ id: true, createdAt: true });
+export const insertScheduledOutfitSchema = createInsertSchema(scheduledOutfits).omit({ id: true, createdAt: true });
 export const insertPreferencesSchema = createInsertSchema(preferences).omit({ id: true });
 
 export type ClothingItem = typeof clothingItems.$inferSelect;
 export type InsertClothingItem = z.infer<typeof insertClothingItemSchema>;
 export type Outfit = typeof outfits.$inferSelect;
 export type InsertOutfit = z.infer<typeof insertOutfitSchema>;
+export type ScheduledOutfit = typeof scheduledOutfits.$inferSelect;
+export type InsertScheduledOutfit = z.infer<typeof insertScheduledOutfitSchema>;
 export type Preferences = typeof preferences.$inferSelect;
 export type InsertPreferences = z.infer<typeof insertPreferencesSchema>;
