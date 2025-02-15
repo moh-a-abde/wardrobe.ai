@@ -4,8 +4,9 @@ import {
   ScheduledOutfit, InsertScheduledOutfit,
   Preferences, InsertPreferences,
   ProductRecommendation, InsertProductRecommendation,
+  FashionTrend, InsertFashionTrend,
   clothingItems, outfits, scheduledOutfits, preferences,
-  productRecommendations
+  productRecommendations, fashionTrends
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, gte, lte } from "drizzle-orm";
@@ -34,6 +35,11 @@ export interface IStorage {
   getProductRecommendations(): Promise<ProductRecommendation[]>;
   createProductRecommendation(recommendation: InsertProductRecommendation): Promise<ProductRecommendation>;
   deleteProductRecommendation(id: number): Promise<void>;
+
+  // Fashion Trends
+  getFashionTrends(): Promise<FashionTrend[]>;
+  createFashionTrend(trend: InsertFashionTrend): Promise<FashionTrend>;
+  deleteFashionTrend(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -114,6 +120,31 @@ export class DatabaseStorage implements IStorage {
 
   async deleteProductRecommendation(id: number): Promise<void> {
     await db.delete(productRecommendations).where(eq(productRecommendations.id, id));
+  }
+
+  // Fashion Trends
+  async getFashionTrends(): Promise<FashionTrend[]> {
+    return await db
+      .select()
+      .from(fashionTrends)
+      .where(
+        and(
+          lte(fashionTrends.validFrom, new Date()),
+          gte(fashionTrends.validTo, new Date())
+        )
+      );
+  }
+
+  async createFashionTrend(trend: InsertFashionTrend): Promise<FashionTrend> {
+    const [newTrend] = await db
+      .insert(fashionTrends)
+      .values(trend)
+      .returning();
+    return newTrend;
+  }
+
+  async deleteFashionTrend(id: number): Promise<void> {
+    await db.delete(fashionTrends).where(eq(fashionTrends.id, id));
   }
 }
 

@@ -96,7 +96,7 @@ Return a JSON object with this format:
 }`;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o", 
+      model: "gpt-4o",
       messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" }
     });
@@ -113,5 +113,64 @@ Return a JSON object with this format:
       };
     }
     throw new Error(`Failed to generate shopping recommendations: ${error.message}`);
+  }
+}
+
+export interface TrendResponse {
+  trends: Array<{
+    title: string;
+    description: string;
+    category: string;
+    season: string;
+    imageUrl: string;
+    source: string;
+    validFrom: string;
+    validTo: string;
+  }>;
+}
+
+export async function generateFashionTrends(): Promise<TrendResponse> {
+  try {
+    const currentDate = new Date();
+    const prompt = `Generate current fashion trends and forecasts.
+Consider:
+1. Current season and upcoming seasonal transitions
+2. Global fashion week insights
+3. Street style trends
+4. Color trends
+5. Sustainable fashion movements
+
+Return a JSON object with this format:
+{
+  "trends": [
+    {
+      "title": "trend title",
+      "description": "detailed trend description",
+      "category": "color_trend" or "style_trend" or "seasonal",
+      "season": "current season",
+      "imageUrl": "placeholder_image_url",
+      "source": "trend source or inspiration",
+      "validFrom": "ISO date string for start of trend",
+      "validTo": "ISO date string for end of trend"
+    }
+  ]
+}`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" }
+    });
+
+    if (!response.choices[0].message.content) {
+      throw new Error("No response from OpenAI");
+    }
+
+    return JSON.parse(response.choices[0].message.content);
+  } catch (error: any) {
+    if (error.status === 429) {
+      return { trends: [] };
+    }
+    throw new Error(`Failed to generate fashion trends: ${error.message}`);
   }
 }

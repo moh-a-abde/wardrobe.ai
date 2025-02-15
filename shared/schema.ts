@@ -49,11 +49,29 @@ export const productRecommendations = pgTable("product_recommendations", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// New table for fashion trends
+export const fashionTrends = pgTable("fashion_trends", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  category: text("category").notNull(), // e.g., "color_trend", "style_trend", "seasonal"
+  season: text("season").notNull(),
+  imageUrl: text("image_url"),
+  source: text("source"),
+  validFrom: timestamp("valid_from").notNull(),
+  validTo: timestamp("valid_to").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertClothingItemSchema = createInsertSchema(clothingItems).omit({ id: true });
 export const insertOutfitSchema = createInsertSchema(outfits).omit({ id: true, createdAt: true });
 export const insertScheduledOutfitSchema = createInsertSchema(scheduledOutfits).omit({ id: true, createdAt: true });
 export const insertPreferencesSchema = createInsertSchema(preferences).omit({ id: true });
 export const insertProductRecommendationSchema = createInsertSchema(productRecommendations).omit({ 
+  id: true,
+  createdAt: true 
+});
+export const insertFashionTrendSchema = createInsertSchema(fashionTrends).omit({ 
   id: true,
   createdAt: true 
 });
@@ -68,3 +86,5 @@ export type Preferences = typeof preferences.$inferSelect;
 export type InsertPreferences = z.infer<typeof insertPreferencesSchema>;
 export type ProductRecommendation = typeof productRecommendations.$inferSelect;
 export type InsertProductRecommendation = z.infer<typeof insertProductRecommendationSchema>;
+export type FashionTrend = typeof fashionTrends.$inferSelect;
+export type InsertFashionTrend = z.infer<typeof insertFashionTrendSchema>;

@@ -10,6 +10,7 @@ import Calendar from "@/pages/calendar";
 import Recommendations from "@/pages/recommendations";
 import Settings from "@/pages/settings";
 import History from "@/pages/history";
+import Trends from "@/pages/trends";
 
 function Router() {
   return (
@@ -19,6 +20,7 @@ function Router() {
         <Route path="/wardrobe" component={Wardrobe} />
         <Route path="/calendar" component={Calendar} />
         <Route path="/recommendations" component={Recommendations} />
+        <Route path="/trends" component={Trends} />
         <Route path="/settings" component={Settings} />
         <Route path="/history" component={History} />
         <Route component={NotFound} />

@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer } from "http";
 import { storage } from "./storage";
-import { generateOutfitSuggestion, generateShoppingRecommendations } from "./openai";
+import { generateOutfitSuggestion, generateShoppingRecommendations, generateFashionTrends } from "./openai";
 import { 
   insertClothingItemSchema, 
   insertOutfitSchema, 
@@ -126,6 +126,34 @@ export async function registerRoutes(app: Express) {
 
   app.delete("/api/recommendations/:id", async (req, res) => {
     await storage.deleteProductRecommendation(Number(req.params.id));
+    res.status(204).end();
+  });
+
+  // Fashion Trends
+  app.get("/api/trends", async (req, res) => {
+    const trends = await storage.getFashionTrends();
+    res.json(trends);
+  });
+
+  app.post("/api/trends/generate", async (req, res) => {
+    const suggestions = await generateFashionTrends();
+
+    // Store the trends
+    const storedTrends = await Promise.all(
+      suggestions.trends.map((trend) =>
+        storage.createFashionTrend({
+          ...trend,
+          validFrom: new Date(trend.validFrom),
+          validTo: new Date(trend.validTo),
+        })
+      )
+    );
+
+    res.json(storedTrends);
+  });
+
+  app.delete("/api/trends/:id", async (req, res) => {
+    await storage.deleteFashionTrend(Number(req.params.id));
     res.status(204).end();
   });
 
