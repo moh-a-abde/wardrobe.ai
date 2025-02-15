@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="icons/icon.png" alt="AI Wardrobe Assistant Logo" width="150"/>
+</p>
 # AI Wardrobe Assistant
 
 **An intelligent, personalized outfit recommendation system that helps you manage your wardrobe, style preferences, and daily fashion choices. This application leverages machine learning and external data (like weather and fashion trends) to suggest the perfect look for any occasion.**  
