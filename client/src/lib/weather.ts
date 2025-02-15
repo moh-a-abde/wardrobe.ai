@@ -38,7 +38,7 @@ export async function getCurrentWeather(
 ): Promise<Weather> {
   const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
   if (!apiKey) {
-    throw new Error("OpenWeather API key not found");
+    throw new Error("Please add VITE_OPENWEATHER_API_KEY to your environment variables in the Secrets tool");
   }
 
   const response = await fetch(

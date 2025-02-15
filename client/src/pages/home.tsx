@@ -20,14 +20,16 @@ export default function Home() {
       try {
         return await getUserLocationAndWeather();
       } catch (error) {
+        console.error('Weather error:', error);
         toast({
-          title: "Error",
-          description: error instanceof Error ? error.message : "Failed to fetch weather",
+          title: "Weather Error",
+          description: error instanceof Error ? error.message : "Failed to fetch weather data. Please ensure location access is enabled and the API key is set.",
           variant: "destructive",
         });
         throw error;
       }
     },
+    retry: 1,
   });
 
   const { data: items = [] } = useQuery<ClothingItem[]>({
