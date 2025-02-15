@@ -67,6 +67,6 @@ The **AI Wardrobe Assistant** is designed to make getting dressed easier and a w
    - Get notified about trending items or essential wardrobe staples.  
    - Discover items that complement your current wardrobe.  
 
-6. **Fashion Tips & Trends **  
+6. **Fashion Tips & Trends**
    - Stay updated on seasonal trends and color forecasts.  
-   - Explore simple styling hacks and guidelines.  
+   - Explore simple styling hacks and guidelines.
