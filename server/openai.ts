@@ -16,7 +16,8 @@ export async function generateOutfitSuggestion(
   items: number[];
   reasoning: string;
 }> {
-  const prompt = `Given these clothing items: ${JSON.stringify(items)}
+  try {
+    const prompt = `Given these clothing items: ${JSON.stringify(items)}
 And user preferences: ${JSON.stringify(preferences)}
 Weather: ${weather}
 Occasion: ${occasion}
@@ -27,11 +28,26 @@ Suggest an outfit combination. Return a JSON object with:
   "reasoning": "explanation of why these items work well together"
 }`;
 
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o",
-    messages: [{ role: "user", content: prompt }],
-    response_format: { type: "json_object" }
-  });
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" }
+    });
 
-  return JSON.parse(response.choices[0].message.content);
+    if (!response.choices[0].message.content) {
+      throw new Error("No response from OpenAI");
+    }
+
+    return JSON.parse(response.choices[0].message.content);
+  } catch (error: any) {
+    // Handle rate limiting and other API errors gracefully
+    if (error.status === 429) {
+      return {
+        items: [],
+        reasoning: "Unable to generate suggestion at the moment. Please try again later."
+      };
+    }
+
+    throw new Error(`Failed to generate outfit suggestion: ${error.message}`);
+  }
 }

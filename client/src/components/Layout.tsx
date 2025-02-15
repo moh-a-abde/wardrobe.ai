@@ -19,8 +19,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="space-y-2">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href}>
-                <a
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+                <div
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors cursor-pointer ${
                     location === item.href
                       ? "bg-primary text-primary-foreground"
                       : "hover:bg-accent"
@@ -28,7 +28,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 >
                   <item.icon className="h-5 w-5" />
                   <span>{item.label}</span>
-                </a>
+                </div>
               </Link>
             ))}
           </div>
@@ -42,15 +42,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="flex justify-around">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href}>
-                <a
-                  className={`p-2 rounded-lg ${
+                <div
+                  className={`p-2 rounded-lg cursor-pointer ${
                     location === item.href
                       ? "text-primary"
                       : "text-muted-foreground"
                   }`}
                 >
                   <item.icon className="h-6 w-6" />
-                </a>
+                </div>
               </Link>
             ))}
           </div>
