@@ -16,8 +16,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="flex h-screen">
-        <nav className="hidden md:flex w-64 border-r bg-card p-4 flex-col">
+      <div className="flex min-h-screen bg-gray-50"> {/*Added background color*/}
+        <nav className="hidden md:flex w-64 border-r bg-card p-4 flex-col shadow-md"> {/*Added shadow*/}
           <div className="text-2xl font-bold mb-8">wardrobe.ai</div>
           <div className="space-y-2">
             {navItems.map((item) => (
@@ -41,7 +41,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           {children}
         </main>
 
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t bg-background p-2">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t bg-background p-2 shadow-md"> {/*Added shadow*/}
           <div className="flex justify-around">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href}>

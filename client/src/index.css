@@ -3,6 +3,21 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+.scroll-container {
+  @apply overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent;
+}
+
+@layer base {
   * {
     @apply border-border;
   }
