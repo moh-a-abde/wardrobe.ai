@@ -40,14 +40,13 @@ Suggest an outfit combination. Return a JSON object with:
 
     return JSON.parse(response.choices[0].message.content);
   } catch (error: any) {
-    // Handle rate limiting and other API errors gracefully
+    console.error('Outfit suggestion error:', error);
     if (error.status === 429) {
       return {
         items: [],
         reasoning: "Unable to generate suggestion at the moment. Please try again later."
       };
     }
-
     throw new Error(`Failed to generate outfit suggestion: ${error.message}`);
   }
 }
@@ -57,7 +56,7 @@ export interface RecommendationResponse {
     name: string;
     type: string;
     color: string;
-    price: number;
+    price: string;
     imageUrl: string;
     productUrl: string;
     reason: string;
@@ -86,15 +85,16 @@ Return a JSON object with this format:
       "name": "item name",
       "type": "clothing type",
       "color": "color",
-      "price": estimated_price,
-      "imageUrl": "placeholder_image_url",
-      "productUrl": "placeholder_product_url",
+      "price": "29.99",
+      "imageUrl": "https://example.com/image.jpg",
+      "productUrl": "https://example.com/product",
       "reason": "detailed reason for recommendation",
       "category": "wardrobe_gap" or "style_match" or "trend"
     }
   ]
 }`;
 
+    console.log('Sending request to OpenAI for shopping recommendations...');
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [{ role: "user", content: prompt }],
@@ -105,12 +105,20 @@ Return a JSON object with this format:
       throw new Error("No response from OpenAI");
     }
 
-    return JSON.parse(response.choices[0].message.content);
+    console.log('Received response from OpenAI:', response.choices[0].message.content);
+    const result = JSON.parse(response.choices[0].message.content);
+
+    // Ensure all prices are strings
+    const recommendations = result.recommendations.map(rec => ({
+      ...rec,
+      price: typeof rec.price === 'number' ? rec.price.toFixed(2) : rec.price
+    }));
+
+    return { recommendations };
   } catch (error: any) {
+    console.error('Shopping recommendations error:', error);
     if (error.status === 429) {
-      return {
-        recommendations: []
-      };
+      return { recommendations: [] };
     }
     throw new Error(`Failed to generate shopping recommendations: ${error.message}`);
   }
@@ -132,7 +140,7 @@ export interface TrendResponse {
 export async function generateFashionTrends(): Promise<TrendResponse> {
   try {
     const currentDate = new Date();
-    const prompt = `Generate current fashion trends and forecasts.
+    const prompt = `Generate current fashion trends and forecasts for ${currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}.
 Consider:
 1. Current season and upcoming seasonal transitions
 2. Global fashion week insights
@@ -148,14 +156,15 @@ Return a JSON object with this format:
       "description": "detailed trend description",
       "category": "color_trend" or "style_trend" or "seasonal",
       "season": "current season",
-      "imageUrl": "placeholder_image_url",
+      "imageUrl": "https://example.com/trend.jpg",
       "source": "trend source or inspiration",
-      "validFrom": "ISO date string for start of trend",
-      "validTo": "ISO date string for end of trend"
+      "validFrom": "2024-02-15",
+      "validTo": "2024-05-15"
     }
   ]
 }`;
 
+    console.log('Sending request to OpenAI for fashion trends...');
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [{ role: "user", content: prompt }],
@@ -166,8 +175,10 @@ Return a JSON object with this format:
       throw new Error("No response from OpenAI");
     }
 
+    console.log('Received response from OpenAI:', response.choices[0].message.content);
     return JSON.parse(response.choices[0].message.content);
   } catch (error: any) {
+    console.error('Fashion trends error:', error);
     if (error.status === 429) {
       return { trends: [] };
     }

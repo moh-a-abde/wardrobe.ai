@@ -41,7 +41,7 @@ export const productRecommendations = pgTable("product_recommendations", {
   name: text("name").notNull(),
   type: text("type").notNull(),
   color: text("color").notNull(),
-  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  price: text("price").notNull(),
   imageUrl: text("image_url").notNull(),
   productUrl: text("product_url").notNull(),
   reason: text("reason").notNull(),
