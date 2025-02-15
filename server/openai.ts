@@ -1,12 +1,12 @@
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error("OPENAI_API_KEY environment variable is required");
+if (!process.env.GEMINI_API_KEY) {
+  throw new Error("GEMINI_API_KEY environment variable is required");
 }
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-// the newest OpenAI model is "gpt-4o" which was released May 13, 2024
 export async function generateOutfitSuggestion(
   items: any[],
   preferences: any,
@@ -28,26 +28,17 @@ Suggest an outfit combination. Return a JSON object with:
   "reasoning": "explanation of why these items work well together"
 }`;
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" }
-    });
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const text = response.text();
 
-    if (!response.choices[0].message.content) {
-      throw new Error("No response from OpenAI");
-    }
-
-    return JSON.parse(response.choices[0].message.content);
+    return JSON.parse(text);
   } catch (error: any) {
     console.error('Outfit suggestion error:', error);
-    if (error.status === 429) {
-      return {
-        items: [],
-        reasoning: "Unable to generate suggestion at the moment. Please try again later."
-      };
-    }
-    throw new Error(`Failed to generate outfit suggestion: ${error.message}`);
+    return {
+      items: [],
+      reasoning: "Unable to generate suggestion at the moment. Please try again later."
+    };
   }
 }
 
@@ -94,33 +85,23 @@ Return a JSON object with this format:
   ]
 }`;
 
-    console.log('Sending request to OpenAI for shopping recommendations...');
-    const response = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" }
-    });
+    console.log('Sending request to Gemini for shopping recommendations...');
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const text = response.text();
 
-    if (!response.choices[0].message.content) {
-      throw new Error("No response from OpenAI");
-    }
+    console.log('Received response from Gemini:', text);
+    const parsedResponse = JSON.parse(text);
 
-    console.log('Received response from OpenAI:', response.choices[0].message.content);
-    const result = JSON.parse(response.choices[0].message.content);
-
-    // Ensure all prices are strings
-    const recommendations = result.recommendations.map(rec => ({
-      ...rec,
-      price: typeof rec.price === 'number' ? rec.price.toFixed(2) : rec.price
-    }));
-
-    return { recommendations };
+    return {
+      recommendations: parsedResponse.recommendations.map(rec => ({
+        ...rec,
+        price: typeof rec.price === 'number' ? rec.price.toFixed(2) : rec.price
+      }))
+    };
   } catch (error: any) {
     console.error('Shopping recommendations error:', error);
-    if (error.status === 429) {
-      return { recommendations: [] };
-    }
-    throw new Error(`Failed to generate shopping recommendations: ${error.message}`);
+    return { recommendations: [] };
   }
 }
 
@@ -164,24 +145,15 @@ Return a JSON object with this format:
   ]
 }`;
 
-    console.log('Sending request to OpenAI for fashion trends...');
-    const response = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" }
-    });
+    console.log('Sending request to Gemini for fashion trends...');
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const text = response.text();
 
-    if (!response.choices[0].message.content) {
-      throw new Error("No response from OpenAI");
-    }
-
-    console.log('Received response from OpenAI:', response.choices[0].message.content);
-    return JSON.parse(response.choices[0].message.content);
+    console.log('Received response from Gemini:', text);
+    return JSON.parse(text);
   } catch (error: any) {
     console.error('Fashion trends error:', error);
-    if (error.status === 429) {
-      return { trends: [] };
-    }
-    throw new Error(`Failed to generate fashion trends: ${error.message}`);
+    return { trends: [] };
   }
 }
