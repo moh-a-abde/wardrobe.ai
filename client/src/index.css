@@ -19,6 +19,12 @@
   }
 }
 
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-color: #334155 transparent;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
