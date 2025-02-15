@@ -8,6 +8,22 @@
 
 ---
 
+## Demo
+
+Here’s a preview of the key screens in the AI Wardrobe Assistant:
+
+| Landing Screen                                                 | Outfit Calendar                                                    |
+|----------------------------------------------------------------|--------------------------------------------------------------------|
+| ![Landing Screen](demo/Landing.png)                     | ![Outfit Calendar](demo/Outfit%20Calendar.png)              |
+
+| Settings                                                       | Wardrobe                                                            |
+|----------------------------------------------------------------|---------------------------------------------------------------------|
+| ![Settings Screen](demo/Settings.png)                   | ![Wardrobe Screen](demo/Wardrobe.png)                        |
+
+
+
+---
+
 ## Table of Contents 📌
 1. [Overview](#overview)
 2. [Key Features](#key-features)
