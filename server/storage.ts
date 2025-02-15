@@ -127,12 +127,7 @@ export class DatabaseStorage implements IStorage {
     return await db
       .select()
       .from(fashionTrends)
-      .where(
-        and(
-          lte(fashionTrends.validFrom, new Date()),
-          gte(fashionTrends.validTo, new Date())
-        )
-      );
+      .orderBy(fashionTrends.createdAt, 'desc');
   }
 
   async createFashionTrend(trend: InsertFashionTrend): Promise<FashionTrend> {
