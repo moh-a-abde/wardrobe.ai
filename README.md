@@ -22,14 +22,14 @@ The **AI Wardrobe Assistant** is designed to make getting dressed easier and a w
 
 ---
 
-## Key Features 🚀
+## Key Features 
 
-1. **Wardrobe Management 👕👠**  
+1. **Wardrobe Management 👕**  
    - Upload and categorize clothing items (tops, bottoms, shoes, accessories).  
    - Tag items with attributes (e.g., color, season, formality).  
    - Mark items as “worn” to track usage frequency.  
 
-2. **AI-Driven Recommendations 🤖💫**  
+2. **AI-Driven Recommendations 🤖**  
    - Generate outfit ideas tailored to user preferences and existing wardrobe.  
    - Incorporate weather data (temperature, precipitation) for practical suggestions.  
    - Suggest alternative outfits for variety.  
@@ -39,7 +39,7 @@ The **AI Wardrobe Assistant** is designed to make getting dressed easier and a w
    - Set color palette preferences.  
    - Save outfits for future reference.  
 
-4. **Event & Calendar Integration 🗓️🎉**  
+4. **Event & Calendar Integration 🗓️**  
    - Plan outfits for upcoming events or daily schedules.  
    - Receive reminders with recommended looks for each occasion.  
 
@@ -47,6 +47,6 @@ The **AI Wardrobe Assistant** is designed to make getting dressed easier and a w
    - Get notified about trending items or essential wardrobe staples.  
    - Discover items that complement your current wardrobe.  
 
-6. **Fashion Tips & Trends 💅**  
+6. **Fashion Tips & Trends **  
    - Stay updated on seasonal trends and color forecasts.  
    - Explore simple styling hacks and guidelines.  
