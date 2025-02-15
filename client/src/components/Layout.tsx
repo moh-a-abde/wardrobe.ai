@@ -18,7 +18,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <div className="min-h-screen bg-background">
       <div className="flex h-screen">
         <nav className="hidden md:flex w-64 border-r bg-card p-4 flex-col">
-          <div className="text-2xl font-bold mb-8">Wardrobe AI</div>
+          <div className="text-2xl font-bold mb-8">wardrobe.ai</div>
           <div className="space-y-2">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href}>
