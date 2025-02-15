@@ -102,6 +102,33 @@ export async function registerRoutes(app: Express) {
     res.json(preferences);
   });
 
+  // Add new route group for shopping recommendations
+  app.get("/api/recommendations", async (req, res) => {
+    const recommendations = await storage.getProductRecommendations();
+    res.json(recommendations);
+  });
+
+  app.post("/api/recommendations/generate", async (req, res) => {
+    const items = await storage.getClothingItems();
+    const preferences = await storage.getPreferences();
+
+    const suggestions = await generateShoppingRecommendations(items, preferences);
+
+    // Store the recommendations
+    const storedRecommendations = await Promise.all(
+      suggestions.recommendations.map(recommendation =>
+        storage.createProductRecommendation(recommendation)
+      )
+    );
+
+    res.json(storedRecommendations);
+  });
+
+  app.delete("/api/recommendations/:id", async (req, res) => {
+    await storage.deleteProductRecommendation(Number(req.params.id));
+    res.status(204).end();
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

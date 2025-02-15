@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Shirt, Settings, History, Home, Calendar } from "lucide-react";
+import { Shirt, Settings, History, Home, Calendar, ShoppingBag } from "lucide-react";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [location] = useLocation();
@@ -8,6 +8,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     { href: "/", icon: Home, label: "Home" },
     { href: "/wardrobe", icon: Shirt, label: "Wardrobe" },
     { href: "/calendar", icon: Calendar, label: "Calendar" },
+    { href: "/recommendations", icon: ShoppingBag, label: "Shop" },
     { href: "/history", icon: History, label: "History" },
     { href: "/settings", icon: Settings, label: "Settings" },
   ];

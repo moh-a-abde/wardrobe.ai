@@ -3,7 +3,9 @@ import {
   Outfit, InsertOutfit,
   ScheduledOutfit, InsertScheduledOutfit,
   Preferences, InsertPreferences,
-  clothingItems, outfits, scheduledOutfits, preferences
+  ProductRecommendation, InsertProductRecommendation,
+  clothingItems, outfits, scheduledOutfits, preferences,
+  productRecommendations
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, gte, lte } from "drizzle-orm";
@@ -27,6 +29,11 @@ export interface IStorage {
   // Preferences
   getPreferences(): Promise<Preferences | undefined>;
   updatePreferences(prefs: InsertPreferences): Promise<Preferences>;
+
+  // Product Recommendations
+  getProductRecommendations(): Promise<ProductRecommendation[]>;
+  createProductRecommendation(recommendation: InsertProductRecommendation): Promise<ProductRecommendation>;
+  deleteProductRecommendation(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -87,9 +94,26 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updatePreferences(prefs: InsertPreferences): Promise<Preferences> {
-    await db.delete(preferences); // Clear existing preferences since we only want one
+    await db.delete(preferences); 
     const [newPrefs] = await db.insert(preferences).values(prefs).returning();
     return newPrefs;
+  }
+
+  // Product Recommendations
+  async getProductRecommendations(): Promise<ProductRecommendation[]> {
+    return await db.select().from(productRecommendations);
+  }
+
+  async createProductRecommendation(recommendation: InsertProductRecommendation): Promise<ProductRecommendation> {
+    const [newRecommendation] = await db
+      .insert(productRecommendations)
+      .values(recommendation)
+      .returning();
+    return newRecommendation;
+  }
+
+  async deleteProductRecommendation(id: number): Promise<void> {
+    await db.delete(productRecommendations).where(eq(productRecommendations.id, id));
   }
 }
 

@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, jsonb, timestamp, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -35,10 +35,28 @@ export const preferences = pgTable("preferences", {
   colorPreferences: jsonb("color_preferences").notNull(),
 });
 
+// New table for product recommendations
+export const productRecommendations = pgTable("product_recommendations", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  type: text("type").notNull(),
+  color: text("color").notNull(),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  imageUrl: text("image_url").notNull(),
+  productUrl: text("product_url").notNull(),
+  reason: text("reason").notNull(),
+  category: text("category").notNull(), // e.g., "wardrobe_gap", "style_match", "trend"
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertClothingItemSchema = createInsertSchema(clothingItems).omit({ id: true });
 export const insertOutfitSchema = createInsertSchema(outfits).omit({ id: true, createdAt: true });
 export const insertScheduledOutfitSchema = createInsertSchema(scheduledOutfits).omit({ id: true, createdAt: true });
 export const insertPreferencesSchema = createInsertSchema(preferences).omit({ id: true });
+export const insertProductRecommendationSchema = createInsertSchema(productRecommendations).omit({ 
+  id: true,
+  createdAt: true 
+});
 
 export type ClothingItem = typeof clothingItems.$inferSelect;
 export type InsertClothingItem = z.infer<typeof insertClothingItemSchema>;
@@ -48,3 +66,5 @@ export type ScheduledOutfit = typeof scheduledOutfits.$inferSelect;
 export type InsertScheduledOutfit = z.infer<typeof insertScheduledOutfitSchema>;
 export type Preferences = typeof preferences.$inferSelect;
 export type InsertPreferences = z.infer<typeof insertPreferencesSchema>;
+export type ProductRecommendation = typeof productRecommendations.$inferSelect;
+export type InsertProductRecommendation = z.infer<typeof insertProductRecommendationSchema>;

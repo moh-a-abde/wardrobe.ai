@@ -7,6 +7,7 @@ import Layout from "@/components/Layout";
 import Home from "@/pages/home";
 import Wardrobe from "@/pages/wardrobe";
 import Calendar from "@/pages/calendar";
+import Recommendations from "@/pages/recommendations";
 import Settings from "@/pages/settings";
 import History from "@/pages/history";
 
@@ -17,6 +18,7 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/wardrobe" component={Wardrobe} />
         <Route path="/calendar" component={Calendar} />
+        <Route path="/recommendations" component={Recommendations} />
         <Route path="/settings" component={Settings} />
         <Route path="/history" component={History} />
         <Route component={NotFound} />

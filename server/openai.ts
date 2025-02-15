@@ -51,3 +51,67 @@ Suggest an outfit combination. Return a JSON object with:
     throw new Error(`Failed to generate outfit suggestion: ${error.message}`);
   }
 }
+
+export interface RecommendationResponse {
+  recommendations: Array<{
+    name: string;
+    type: string;
+    color: string;
+    price: number;
+    imageUrl: string;
+    productUrl: string;
+    reason: string;
+    category: string;
+  }>;
+}
+
+export async function generateShoppingRecommendations(
+  existingItems: any[],
+  preferences: any,
+): Promise<RecommendationResponse> {
+  try {
+    const prompt = `Given these existing clothing items: ${JSON.stringify(existingItems)}
+And user preferences: ${JSON.stringify(preferences)}
+
+Suggest clothing items to purchase that would complement the existing wardrobe.
+Consider:
+1. Fill gaps in the wardrobe
+2. Match user's style preferences
+3. Seasonal appropriateness
+
+Return a JSON object with this format:
+{
+  "recommendations": [
+    {
+      "name": "item name",
+      "type": "clothing type",
+      "color": "color",
+      "price": estimated_price,
+      "imageUrl": "placeholder_image_url",
+      "productUrl": "placeholder_product_url",
+      "reason": "detailed reason for recommendation",
+      "category": "wardrobe_gap" or "style_match" or "trend"
+    }
+  ]
+}`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o", 
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" }
+    });
+
+    if (!response.choices[0].message.content) {
+      throw new Error("No response from OpenAI");
+    }
+
+    return JSON.parse(response.choices[0].message.content);
+  } catch (error: any) {
+    if (error.status === 429) {
+      return {
+        recommendations: []
+      };
+    }
+    throw new Error(`Failed to generate shopping recommendations: ${error.message}`);
+  }
+}
