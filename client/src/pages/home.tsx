@@ -1,18 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { OutfitSuggestion } from "@/components/OutfitSuggestion";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { getUserLocationAndWeather } from "@/lib/weather";
 import type { ClothingItem } from "@shared/schema";
-
-type Weather = "sunny" | "cloudy" | "rainy" | "snowy";
+import type { Weather } from "@/lib/weather";
 
 export default function Home() {
   const { toast } = useToast();
-  const [weather] = useState<Weather>("sunny");
   const [occasion, setOccasion] = useState("casual");
+
+  // Fetch real-time weather data
+  const { data: weather, isLoading: isLoadingWeather } = useQuery({
+    queryKey: ["/weather"],
+    queryFn: getUserLocationAndWeather,
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: `Failed to fetch weather: ${error.message}`,
+        variant: "destructive",
+      });
+    },
+  });
 
   const { data: items = [] } = useQuery<ClothingItem[]>({
     queryKey: ["/api/clothing"],
@@ -20,8 +32,10 @@ export default function Home() {
 
   const { data: suggestion, isPending, mutate: generateSuggestion } = useMutation({
     mutationFn: async () => {
+      if (!weather) throw new Error("Weather data not available");
+
       const res = await apiRequest("POST", "/api/outfits/suggest", {
-        weather,
+        weather: weather.weather,
         occasion,
       });
       return res.json();
@@ -37,9 +51,11 @@ export default function Home() {
 
   const { mutate: saveOutfit } = useMutation({
     mutationFn: async () => {
+      if (!weather) throw new Error("Weather data not available");
+
       await apiRequest("POST", "/api/outfits", {
         items: suggestion?.items,
-        weather,
+        weather: weather.weather,
         occasion,
       });
     },
@@ -66,7 +82,7 @@ export default function Home() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Today's Outfit</h1>
-        <WeatherWidget weather={weather} temperature={22} />
+        {weather && <WeatherWidget weather={weather} isLoading={isLoadingWeather} />}
       </div>
 
       <div className="flex gap-2 mb-4">
@@ -94,7 +110,7 @@ export default function Home() {
           className="w-full"
           size="lg"
           onClick={() => generateSuggestion()}
-          disabled={isPending}
+          disabled={isPending || isLoadingWeather}
         >
           Generate Outfit Suggestion
         </Button>
