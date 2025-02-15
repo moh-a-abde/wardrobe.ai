@@ -1,4 +1,4 @@
-# AI Wardrobe Assistant 👗🤖
+# AI Wardrobe Assistant
 
 **An intelligent, personalized outfit recommendation system that helps you manage your wardrobe, style preferences, and daily fashion choices. This application leverages machine learning and external data (like weather and fashion trends) to suggest the perfect look for any occasion.**  
 
