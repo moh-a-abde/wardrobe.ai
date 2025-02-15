@@ -12,13 +12,17 @@
 
 Here’s a preview of the key screens in the AI Wardrobe Assistant:
 
-| Landing Screen / Outfit Generator                                             | Outfit Calendar  / Schedule Outfit                                                  |
-|----------------------------------------------------------------|--------------------------------------------------------------------|
-| ![Landing Screen](demo/LandingScreen.png)                     | ![Outfit Calendar](demo/Outfit%20Calendar.png)              |
+| Landing Screen / Outfit Generator                              | 
+|----------------------------------------------------------------|
+| ![Landing Screen](demo/LandingScreen.png)                     |
 
-| Settings / Preferences                                                       | Wardrobe Showcase                                                            |
+| Wardrobe Showcase                                             | Trends                                                 |
+|----------------------------------------------------------------|--------------------------------------------------------------------|
+| ![Wardrobe Screen](demo/WardrobeShowcase.png)                      | ![Trends](demo/Trends.png)              |
+
+| Settings / Preferences                                  | Outfit Calendar  / Schedule Outfit                                                           |
 |----------------------------------------------------------------|---------------------------------------------------------------------|
-| ![Settings Screen](demo/Settings.png)                   | ![Wardrobe Screen](demo/WardrobeShowcase.png)                        |
+| ![Settings Screen](demo/Settings.png)                   | ![Outfit Calendar](demo/Outfit%20Calendar.png)                        |
 
 
 
