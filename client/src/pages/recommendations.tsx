@@ -79,6 +79,10 @@ export default function Recommendations() {
                   src={recommendation.imageUrl}
                   alt={recommendation.name}
                   className="w-full h-48 object-cover rounded-md mb-4"
+                  onError={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.src = "https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/01.png";
+                  }}
                 />
                 <div className="space-y-2">
                   <p className="text-sm">
