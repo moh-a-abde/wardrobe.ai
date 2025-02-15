@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { OutfitSuggestion } from "@/components/OutfitSuggestion";
@@ -14,15 +14,19 @@ export default function Home() {
   const [occasion, setOccasion] = useState("casual");
 
   // Fetch real-time weather data
-  const { data: weather, isLoading: isLoadingWeather } = useQuery({
+  const { data: weather, isLoading: isLoadingWeather, error: weatherError } = useQuery({
     queryKey: ["/weather"],
-    queryFn: getUserLocationAndWeather,
-    onError: (error: Error) => {
-      toast({
-        title: "Error",
-        description: `Failed to fetch weather: ${error.message}`,
-        variant: "destructive",
-      });
+    queryFn: async () => {
+      try {
+        return await getUserLocationAndWeather();
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: error instanceof Error ? error.message : "Failed to fetch weather",
+          variant: "destructive",
+        });
+        throw error;
+      }
     },
   });
 
@@ -82,7 +86,17 @@ export default function Home() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Today's Outfit</h1>
-        {weather && <WeatherWidget weather={weather} isLoading={isLoadingWeather} />}
+        {(isLoadingWeather || weather) && (
+          <WeatherWidget 
+            weather={weather ?? { 
+              temperature: 20, 
+              weather: "sunny", 
+              description: "Loading weather...",
+              location: "Loading location..." 
+            }} 
+            isLoading={isLoadingWeather} 
+          />
+        )}
       </div>
 
       <div className="flex gap-2 mb-4">
