@@ -1,0 +1,58 @@
+CREATE TABLE IF NOT EXISTS clothing_items (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  color TEXT NOT NULL,
+  season TEXT NOT NULL,
+  occasion TEXT NOT NULL,
+  image_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS fashion_trends (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  category TEXT NOT NULL,
+  season TEXT NOT NULL,
+  image_url TEXT,
+  source TEXT,
+  valid_from TIMESTAMP WITH TIME ZONE,
+  valid_to TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS outfits (
+  id SERIAL PRIMARY KEY,
+  items TEXT[] NOT NULL,
+  occasion TEXT NOT NULL,
+  weather TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS preferences (
+  id SERIAL PRIMARY KEY,
+  style_preferences TEXT[] NOT NULL,
+  color_preferences TEXT[] NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS product_recommendations (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  color TEXT NOT NULL,
+  price DECIMAL NOT NULL,
+  image_url TEXT,
+  product_url TEXT,
+  reason TEXT,
+  category TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS scheduled_outfits (
+  id SERIAL PRIMARY KEY,
+  outfit_id INTEGER NOT NULL REFERENCES outfits(id),
+  date TIMESTAMP WITH TIME ZONE NOT NULL,
+  notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+); 
